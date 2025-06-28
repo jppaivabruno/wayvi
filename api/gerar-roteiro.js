@@ -21,39 +21,41 @@ module.exports = async (req, res) => {
     rawBody += chunk;
   }
 
-  let cidade, dias;
+  let destinos;
   try {
-    // Agora sim: faz parse da string
     const data = JSON.parse(rawBody);
-    cidade = data.cidade;
-    dias = data.dias;
+    destinos = data.destinos;
   } catch (e) {
     res.status(400).json({ erro: "Erro ao ler o corpo da requisição." });
     return;
   }
 
-  if (!cidade || !dias) {
-    res.status(400).json({ erro: "Cidade e dias são obrigatórios" });
+  if (!destinos || !Array.isArray(destinos) || destinos.length === 0) {
+    res.status(400).json({ erro: "Destinos são obrigatórios" });
     return;
   }
 
+  // Monta prompt multi-destinos
+  let prompt = "Monte um roteiro de viagem empolgante com os principais pontos turísticos para o seguinte itinerário:\n";
+  destinos.forEach((d, i) => {
+    prompt += `- ${d.cidade} (${d.dias} dias)\n`;
+  });
+  prompt += "Para cada cidade, organize o roteiro dia a dia, sugira passeios e como comprá-los (Getyourguide), sugira alguns restaurantes baseados em dicas no tripadvisor. Torne a viagem inesquecível! Use uma linguagem empolgante, clara e divida cada cidade por seção.\n";
+
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  const prompt = `Monte um roteiro completo de viagem para ${cidade} em ${dias} dias, com sugestões de passeios, restaurantes e dicas para cada dia.`;
 
   try {
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
+      temperature: 0.78,
     });
-
     res.status(200).json({ roteiro: completion.choices[0].message.content });
   } catch (error) {
-    // EXIBE O ERRO DETALHADO NO RETORNO
-    res.status(500).json({ 
+    res.status(500).json({
       erro: "Erro ao gerar roteiro.",
       details: error.message || error.toString(),
-      stack: error.stack
+      stack: error.stack,
     });
   }
 };
