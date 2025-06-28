@@ -15,12 +15,15 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Lê o body como string
   let rawBody = '';
   for await (const chunk of req) {
     rawBody += chunk;
   }
+
   let cidade, dias;
   try {
+    // Agora sim: faz parse da string
     const data = JSON.parse(rawBody);
     cidade = data.cidade;
     dias = data.dias;
