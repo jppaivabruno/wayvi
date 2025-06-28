@@ -1,22 +1,49 @@
 const OpenAI = require("openai");
 
 module.exports = async (req, res) => {
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Preflight CORS
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     res.status(405).send('Método não permitido');
     return;
   }
 
-  const { cidade, dias } = req.body;
+  let cidade, dias;
+  try {
+    if (req.body && req.body.cidade && req.body.dias) {
+      cidade = req.body.cidade;
+      dias = req.body.dias;
+    } else {
+      let data = '';
+      for await (const chunk of req) {
+        data += chunk;
+      }
+      if (data) {
+        const parsed = JSON.parse(data);
+        cidade = parsed.cidade;
+        dias = parsed.dias;
+      }
+    }
+  } catch (e) {
+    res.status(400).json({ erro: 'Erro ao ler o corpo da requisição.' });
+    return;
+  }
 
   if (!cidade || !dias) {
     res.status(400).json({ erro: 'Cidade e dias são obrigatórios' });
     return;
   }
 
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const prompt = `Monte um roteiro completo de viagem para ${cidade} em ${dias} dias, com sugestões de passeios, restaurantes e dicas para cada dia.`;
 
   try {
