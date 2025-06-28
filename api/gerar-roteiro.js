@@ -49,6 +49,11 @@ module.exports = async (req, res) => {
 
     res.status(200).json({ roteiro: completion.choices[0].message.content });
   } catch (error) {
-    res.status(500).json({ erro: "Erro ao gerar o roteiro." });
+    // EXIBE O ERRO DETALHADO NO RETORNO
+    res.status(500).json({ 
+      erro: "Erro ao gerar roteiro.",
+      details: error.message || error.toString(),
+      stack: error.stack
+    });
   }
 };
