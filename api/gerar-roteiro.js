@@ -12,15 +12,15 @@ module.exports = async (req, res) => {
     return;
   }
 
-  // DEBUG: Mostra exatamente o que chega no backend
+  // Debug: mostra o body exatamente como chegou
   let rawBody = '';
   for await (const chunk of req) {
     rawBody += chunk;
   }
 
   res.status(200).json({
-    metodo: req.method,
-    headers: req.headers,
-    rawBody: rawBody
+    receivedBody: rawBody,
+    typeofBody: typeof rawBody,
+    headers: req.headers
   });
 };
