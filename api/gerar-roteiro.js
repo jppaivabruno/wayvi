@@ -44,10 +44,10 @@ module.exports = async (req, res) => {
  
  prompt += `\nINSTRUÇÕES ESPECÍFICAS:
  
-1. ESTRUTURA DIÁRIA: Organize cada dia em 3 períodos:
-  - 🌅 MANHÃ (9h-12h): Atividades principais e pontos turísticos
-  - 🌆 TARDE (14h-18h): Continuação das atividades e exploração
-  - 🌃 NOITE (19h+): Atividades noturnas, relaxamento ou vida noturna local
+1. ESTRUTURA DIÁRIA: Organize cada dia em 3 períodos e coloque pelo menos 3 atividades por período, exceto no da noite que pode ser menos:
+  -  MANHÃ: Atividades principais e pontos turísticos
+  -  TARDE: Continuação das atividades e exploração
+  -  NOITE: Atividades noturnas, relaxamento ou vida noturna local
 
 2. FOCO: Priorize sempre os principais pontos turísticos, experiências imperdíveis e atrações mais famosas de cada destino.
 
