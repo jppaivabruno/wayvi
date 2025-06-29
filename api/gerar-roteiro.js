@@ -36,11 +36,11 @@ module.exports = async (req, res) => {
   }
 
   // Monta prompt multi-destinos
-  let prompt = "Monte um roteiro de viagem empolgante com os principais pontos turísticos para o seguinte itinerário:\n";
+  let prompt = "Monte um roteiro de viagem empolgante com os pontos turísticos que não pode deixar de visitar para o seguinte itinerário:\n";
   destinos.forEach((d, i) => {
     prompt += `- ${d.cidade} (${d.dias} dias)\n`;
   });
-  prompt += "Para cada cidade, organize o roteiro dia a dia, sugira passeios e como comprá-los (Getyourguide), sugira alguns restaurantes baseados em dicas no tripadvisor. Torne a viagem inesquecível! Use uma linguagem empolgante, clara e divida cada cidade por seção.\n";
+  prompt += "Para cada cidade, organize o roteiro dia a dia dividido entre manhã, tarde e noite, sugira passeios e como comprá-los tanto online como físico. Torne a viagem inesquecível! Use uma linguagem empolgante, clara e divida cada cidade por seção.\n";
 
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
